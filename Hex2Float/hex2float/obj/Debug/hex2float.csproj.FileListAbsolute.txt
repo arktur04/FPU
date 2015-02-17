@@ -1,0 +1,9 @@
+C:\Users\V\Dropbox\hex2float\hex2float\bin\Debug\hex2float.exe.config
+C:\Users\V\Dropbox\hex2float\hex2float\bin\Debug\hex2float.exe
+C:\Users\V\Dropbox\hex2float\hex2float\bin\Debug\hex2float.pdb
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.csprojResolveAssemblyReference.cache
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.Form1.resources
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.Properties.Resources.resources
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.csproj.GenerateResource.Cache
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.exe
+C:\Users\V\Dropbox\hex2float\hex2float\obj\Debug\hex2float.pdb
