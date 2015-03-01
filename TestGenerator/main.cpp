@@ -41,19 +41,31 @@ float long2float(unsigned long l)
   return * static_cast<float*>((void*)&l);
 }
 
-double longlong2double(unsigned long long ll)
+void subnormalToZero(unsigned long long &x)
 {
   //check if subnormal
-  if(!(ll & 0x7ff0000000000000ull))
+  if(!(x & 0x7ff0000000000000ull))
   {
-      ll &= 0x8000000000000000ull;
+      x &= 0x8000000000000000ull;
   }
+}
+
+double longlong2double(unsigned long long ll)
+{
+//  subnormalToZero(ll);
   return * static_cast<double*>((void*)&ll);
 }
 
 unsigned long long double2longlong(double d)
 {
-  return * static_cast<unsigned long long*>((void*)&d);
+  unsigned long long ll = * static_cast<unsigned long long*>((void*)&d);
+  subnormalToZero(ll);
+  return ll;
+}
+
+void subnormalToZero(double &x)
+{
+	x = longlong2double(double2longlong(x));
 }
 
 std::string double2string(double x)
@@ -96,14 +108,20 @@ void printLine(std::ostream &out, unsigned long long ll_x, unsigned long long ll
 {
     double d_x = longlong2double(ll_x);
     double d_y = longlong2double(ll_y);
+	double d_x_corr, d_y_corr; 
     out.fill('0');
     out.width(16);
     out << std::hex << ll_x << " ";
     out.width(16);
     out << ll_y << " ";
     out.width(16);
-    out <<  double2longlong(d_x / d_y);
-    out << " //" << double2string(d_x) << " / " << double2string(d_y) << " = " << double2string(d_x / d_y) << std::endl;
+	// значения после удаления денормализованных чисел
+	d_x_corr = d_x;
+	d_y_corr = d_y;
+	subnormalToZero(d_x_corr);
+	subnormalToZero(d_y_corr);
+    out <<  double2longlong(d_x_corr / d_y_corr);
+    out << " //" << double2string(d_x) << " / " << double2string(d_y) << " = " << double2string(d_x_corr / d_y_corr) << std::endl;
 }
 
 int main()
@@ -119,7 +137,6 @@ int main()
             unsigned long long ll_x = floatKind2int64(fk_x);
             unsigned long long ll_y = floatKind2int64(fk_y);
             printLine(testfile, ll_x, ll_y);
-            //std::cout << " //" << floatKind2string(fk_x) << " / " << floatKind2string(fk_y) << std::endl;
         }
     }
     //-----------
@@ -128,6 +145,5 @@ int main()
         printLine(testfile, randomInt64(), randomInt64());
     }
     testfile.close();
-    //std::getchar();
     return 0;
 }
