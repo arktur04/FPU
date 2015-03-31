@@ -86,4 +86,25 @@ begin
 end
 endfunction
 
+function is_zero;
+input [`DATA_WIDTH - 1: 0] value;
+begin
+  is_zero = value[`DATA_WIDTH - 2: `DATA_WIDTH - `EXP_WIDTH - 1] == {`EXP_WIDTH{1'b0}};
+end
+endfunction
+
+function is_inf;
+input [`DATA_WIDTH - 1: 0] value;
+begin
+  is_inf = (value[`DATA_WIDTH - 2: `DATA_WIDTH - `EXP_WIDTH - 1] == {`EXP_WIDTH{1'b1}}) && (value[`DATA_WIDTH - `EXP_WIDTH - 2: 0] == {`FRAC_WIDTH{1'b0}});
+end
+endfunction
+
+function is_nan;
+input [`DATA_WIDTH - 1: 0] value;
+begin
+  is_nan = (value[`DATA_WIDTH - 2: `DATA_WIDTH - `EXP_WIDTH - 1] == {`EXP_WIDTH{1'b1}}) && (value[`DATA_WIDTH - `EXP_WIDTH - 2: 0] != {`FRAC_WIDTH{1'b0}});
+end
+endfunction
+
 endmodule
