@@ -18,18 +18,21 @@ enum class OperandsType
   OT_LAST
 };
 
+//special values for 64-bit floats (double precision)
 unsigned long floatKind2int64(FloatKind fk)
 {
     unsigned long val64[(int)FloatKind::FK_LAST] = {0, 0x8000000000000000ull, 0x7ff0000000000001ull, 0xfff0000000000001ull, 0x7ff0000000000000ull, 0xfff0000000000000ull};
     return val64[(int)fk];
 }
 
+//special values for 32-bit floats (single precision)
 unsigned int floatKind2int32(FloatKind fk)
 {
     unsigned int val32[(int)FloatKind::FK_LAST] = {0, 0x80000000ul, 0x7f800001ul, 0xff800001ul, 0x7f800000ul, 0xff800000ul};
     return val32[(int)fk];
 }
 
+// get a string for a special kind of a float
 std::string floatKind2string(FloatKind fk)
 {
     std::string strVal[(int)FloatKind::FK_LAST] = {"0.0", "-0.0", "nan", "-nan", "+inf", "-inf"};
@@ -39,6 +42,7 @@ std::string floatKind2string(FloatKind fk)
         return "unknown";
 }
 
+//get a string for an operand type
 std::string operandsType2string(OperandsType ot)
 {
 	std::string strVal[(int)OperandsType::OT_LAST] = {"f32", "f64", /* "f80", "bcd" */};
@@ -48,31 +52,37 @@ std::string operandsType2string(OperandsType ot)
         return "unknown";
 }
 
+//convert a single precision float to a 32-bit binary representation
 unsigned int float2int(float f)
 {
   return * static_cast<unsigned int*>((void*)&f);
 }
 
+//convert a 32-bit binary representation to a single precision float
 float int2float(unsigned int l)
 {
 	return * static_cast<float*>((void*)&l);
 }
 
+//convert a 64-bit binary representation to a double precision float
 double long2double(unsigned long ul)
 {
   return * static_cast<double*>((void*)&ul);
 }
 
+//convert a double precision float to a 64-bit binary representation
 unsigned long double2long(double d)
 {
   return * static_cast<unsigned long*>((void*)&d);
 }
 
+//generate random byte
 unsigned char randomByte()
 {
     return rand();
 }
 
+// generate a random integer of given size 
 unsigned __int128 randomInt(OperandsType ot)
 {
     unsigned long result = 0;
@@ -95,11 +105,13 @@ unsigned __int128 randomInt(OperandsType ot)
     return result;
 }
 
+// select an operand type randomly
 OperandsType randomOperandsType()
 {
 	return static_cast<OperandsType>(rand() % (int)OperandsType::OT_LAST);
 }
 
+//convert a 32-bit binary representation of a single precision number into a string
 std::string f32ToString(unsigned int x)
 {
 	std::stringstream s;
@@ -113,6 +125,7 @@ std::string f32ToString(unsigned int x)
 	return s.str();
 }
 
+//convert a 64-bit binary representation of a double precision number into a string
 std::string f64ToString(unsigned long x)
 {
 	std::stringstream s;
@@ -176,6 +189,7 @@ int main()
 {
     std::ofstream testfile;
     testfile.open ("test_file.txt");
+	// 32-bit corner cases test suite
     for(int fk_i = (int)FloatKind::FK_ZERO; fk_i < (int)FloatKind::FK_LAST; fk_i++)
     {
         for(int fk_j = (int)FloatKind::FK_ZERO; fk_j < (int)FloatKind::FK_LAST; fk_j++)
@@ -188,6 +202,7 @@ int main()
 			testfile << s;
         }
     }
+	// 64-bit corner cases test suite
 	for(int fk_i = (int)FloatKind::FK_ZERO; fk_i < (int)FloatKind::FK_LAST; fk_i++)
     {
         for(int fk_j = (int)FloatKind::FK_ZERO; fk_j < (int)FloatKind::FK_LAST; fk_j++)
@@ -200,6 +215,8 @@ int main()
 			testfile << s;
         }
     }
+	//
+	// mixing types test suite
     //-----------
     for(int i = 0; i <= 10000; i++)
     {
